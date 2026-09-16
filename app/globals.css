@@ -1,0 +1,234 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Somaliland government theme — green, white, red */
+  --background: oklch(0.99 0.005 120);
+  --foreground: oklch(0.12 0.02 120);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.12 0.02 120);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.12 0.02 120);
+  --primary: oklch(0.35 0.15 145); /* Somaliland Green #1B5E20 */
+  --primary-foreground: oklch(0.98 0.005 120);
+  --secondary: oklch(0.96 0.01 120);
+  --secondary-foreground: oklch(0.35 0.15 145);
+  --muted: oklch(0.96 0.005 120);
+  --muted-foreground: oklch(0.52 0.02 120);
+  --accent: oklch(0.72 0.13 85); /* Somaliland Gold #CFA93F */
+  --accent-foreground: oklch(0.12 0.02 120);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.985 0.005 120);
+  --border: oklch(0.90 0.005 120);
+  --input: oklch(0.92 0.005 120);
+  --ring: oklch(0.35 0.15 145);
+  --chart-1: oklch(0.35 0.15 145);
+  --chart-2: oklch(0.75 0.12 85);
+  --chart-3: oklch(0.6 0.1 200);
+  --chart-4: oklch(0.7 0.1 300);
+  --chart-5: oklch(0.8 0.1 50);
+  --radius: 0.5rem;
+  --sidebar: oklch(0.98 0.005 120);
+  --sidebar-foreground: oklch(0.12 0.02 120);
+  --sidebar-primary: oklch(0.35 0.15 145);
+  --sidebar-primary-foreground: oklch(0.98 0.005 120);
+  --sidebar-accent: oklch(0.95 0.01 120);
+  --sidebar-accent-foreground: oklch(0.35 0.15 145);
+  --sidebar-border: oklch(0.92 0.005 120);
+  --sidebar-ring: oklch(0.35 0.15 145);
+
+  /* Brand colors (direct hex for use in non-Tailwind contexts) */
+  --sl-green: #1B5E20;
+  --sl-gold: #CFA93F;
+  --sl-red: #C62828;
+  --sl-white: #FFFFFF;
+}
+
+.dark {
+  --background: oklch(0.08 0.01 120);
+  --foreground: oklch(0.95 0.005 120);
+  --card: oklch(0.12 0.01 120);
+  --card-foreground: oklch(0.95 0.005 120);
+  --popover: oklch(0.12 0.01 120);
+  --popover-foreground: oklch(0.95 0.005 120);
+  --primary: oklch(0.48 0.18 145);
+  --primary-foreground: oklch(0.08 0.01 120);
+  --secondary: oklch(0.18 0.01 120);
+  --secondary-foreground: oklch(0.95 0.005 120);
+  --muted: oklch(0.18 0.01 120);
+  --muted-foreground: oklch(0.65 0.02 120);
+  --accent: oklch(0.8 0.15 85);
+  --accent-foreground: oklch(0.08 0.01 120);
+  --destructive: oklch(0.6 0.25 25);
+  --destructive-foreground: oklch(0.95 0.005 120);
+  --border: oklch(0.22 0.01 120);
+  --input: oklch(0.22 0.01 120);
+  --ring: oklch(0.48 0.18 145);
+  --chart-1: oklch(0.48 0.18 145);
+  --chart-2: oklch(0.8 0.15 85);
+  --chart-3: oklch(0.65 0.12 200);
+  --chart-4: oklch(0.75 0.12 300);
+  --chart-5: oklch(0.85 0.12 50);
+  --sidebar: oklch(0.10 0.01 120);
+  --sidebar-foreground: oklch(0.95 0.005 120);
+  --sidebar-primary: oklch(0.48 0.18 145);
+  --sidebar-primary-foreground: oklch(0.08 0.01 120);
+  --sidebar-accent: oklch(0.18 0.01 120);
+  --sidebar-accent-foreground: oklch(0.95 0.005 120);
+  --sidebar-border: oklch(0.22 0.01 120);
+  --sidebar-ring: oklch(0.48 0.18 145);
+}
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  /* font-heading utility */
+  .font-heading {
+    font-family: var(--font-geist-sans), system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+}
+
+/* ─── Micro-animations ────────────────────────────────────────── */
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes pulse-ring {
+  0%   { box-shadow: 0 0 0 0 rgba(27, 94, 32, 0.4); }
+  70%  { box-shadow: 0 0 0 12px rgba(27, 94, 32, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(27, 94, 32, 0); }
+}
+
+@keyframes count-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.5s ease-out both;
+}
+
+.animate-fade-up-delay-1 {
+  animation: fade-up 0.5s ease-out 0.1s both;
+}
+
+.animate-fade-up-delay-2 {
+  animation: fade-up 0.5s ease-out 0.2s both;
+}
+
+.animate-fade-up-delay-3 {
+  animation: fade-up 0.5s ease-out 0.3s both;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease-out both;
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ─── Somaliland flag bar (3px stripe: green / white / red) ──── */
+.sl-flag-bar {
+  height: 4px;
+  background: linear-gradient(
+    to right,
+    #1B5E20 0%,
+    #1B5E20 33.33%,
+    #ffffff 33.33%,
+    #ffffff 66.66%,
+    #C62828 66.66%,
+    #C62828 100%
+  );
+}
+
+/* ─── Glassmorphism card ─────────────────────────────────────── */
+.glass-card {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* ─── Premium gradient text ──────────────────────────────────── */
+.gradient-text {
+  background: linear-gradient(135deg, #1B5E20 0%, #CFA93F 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
