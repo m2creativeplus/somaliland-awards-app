@@ -26,6 +26,7 @@ export default function AdminLoginPage() {
 
     if (password === "admin2026") {
       setAdminAuth(true)
+      document.cookie = "admin-session=true; path=/; max-age=86400; SameSite=Lax"
       router.push("/admin")
     } else {
       setError("Incorrect password. Try: admin2026")

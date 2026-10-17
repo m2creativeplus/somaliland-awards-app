@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import type { Submission } from "@/lib/types"
-import { addSubmission } from "@/lib/store"
+import { addSubmission } from "@/lib/actions"
 import { CheckCircle, Award, Calendar, Users } from "lucide-react"
 
 export default function SubmitPage() {
@@ -20,8 +20,8 @@ export default function SubmitPage() {
   const { toast } = useToast()
   const router = useRouter()
 
-  const handleSubmission = (submission: Partial<Submission>) => {
-    const saved = addSubmission(submission)
+  const handleSubmission = async (submission: Partial<Submission>) => {
+    const saved = await addSubmission(submission)
     setSubmissionId(saved.id)
     setIsSubmitted(true)
     toast({

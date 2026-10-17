@@ -2,9 +2,11 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { LayoutDashboard, FileImage, Award, Users, Settings, BarChart3, Shield } from "lucide-react"
+import { LayoutDashboard, FileImage, Award, Users, Settings, BarChart3, Shield, LogOut } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { setAdminAuth } from "@/lib/store"
+import { useRouter } from "next/navigation"
 
 const sidebarItems = [
   {
@@ -41,6 +43,13 @@ const sidebarItems = [
 
 export function AdminSidebar() {
   const pathname = usePathname()
+  const router = useRouter()
+
+  const handleSignOut = () => {
+    setAdminAuth(false)
+    document.cookie = "admin-session=; path=/; max-age=0; SameSite=Lax"
+    router.push("/admin/login")
+  }
 
   return (
     <div className="flex h-full w-64 flex-col border-r bg-muted/20">
@@ -67,11 +76,19 @@ export function AdminSidebar() {
           ))}
         </nav>
       </div>
-      <div className="mt-auto border-t p-4">
+      <div className="mt-auto border-t p-4 space-y-2">
         <Button variant="outline" className="w-full justify-start gap-2 bg-transparent" asChild>
           <Link href="/">
             <span className="truncate">Back to Site</span>
           </Link>
+        </Button>
+        <Button
+          variant="ghost"
+          className="w-full justify-start gap-2 text-destructive hover:bg-destructive/10 hover:text-destructive"
+          onClick={handleSignOut}
+        >
+          <LogOut className="h-4 w-4" />
+          <span className="truncate">Sign Out</span>
         </Button>
       </div>
     </div>

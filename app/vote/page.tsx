@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import type { Submission } from "@/lib/types"
-import { getApprovedSubmissions, getVotes, getUserVotes, castVote } from "@/lib/store"
+import { getApprovedSubmissions, castVote } from "@/lib/actions"
 import { Search, Info, Vote } from "lucide-react"
 
 // Voting submissions — merged from store + extra mock entries
@@ -64,28 +64,86 @@ const extraSubmissions: Submission[] = [
 ]
 
 export default function VotePage() {
-  const [votes, setVotes] = useState<Record<string, number>>(() => getVotes())
-  const [userVotedIds, setUserVotedIds] = useState<Set<string>>(() => new Set(getUserVotes()))
+  const [votes, setVotes] = useState<Record<string, number>>({})
+  const [userVotedIds, setUserVotedIds] = useState<Set<string>>(new Set())
   const [allSubmissions, setAllSubmissions] = useState<Submission[]>(extraSubmissions)
   const [filters, setFilters] = useState({ category: "all", search: "" })
 
   useEffect(() => {
-    // Merge store submissions with extra mock ones (avoid duplicates)
-    const stored = getApprovedSubmissions()
-    const storedIds = new Set(stored.map((s) => s.id))
-    const extras = extraSubmissions.filter((s) => !storedIds.has(s.id))
-    setAllSubmissions([...extras, ...stored])
+    // Load local user votes
+    const localVotes = JSON.parse(localStorage.getItem("sl-awards-user-votes") || "[]")
+    setUserVotedIds(new Set(localVotes))
+
+    async function loadData() {
+      try {
+        const stored = await getApprovedSubmissions()
+        const formattedStored: Submission[] = (stored || []).map((s: any) => ({
+          id: String(s.id),
+          asset_id: s.asset_id || String(s.id),
+          entrant: {
+            name: s.entrant_name || s.entrant?.name || "Anonymous",
+            email: s.entrant_email || s.entrant?.email || "",
+            organization: s.entrant_org || s.entrant?.organization,
+            country: s.entrant_country || "Somaliland",
+          },
+          category: s.category || "logo-design",
+          entry_fee_paid: s.entry_fee_paid ?? true,
+          files: {
+            original: s.file_original || "",
+            preview: s.file_preview || "/placeholder.svg?key=vote1",
+          },
+          metadata: {
+            title: s.title || "Untitled",
+            description: s.description || "",
+            inspiration: s.inspiration || "",
+            tools_used: typeof s.tools_used === "string" ? JSON.parse(s.tools_used || "[]") : [],
+          },
+          scorecard: {
+            criteria: {
+              creativity: { score: Number(s.score_creativity || 90), weight: 25 },
+              functionality: { score: Number(s.score_functional || 90), weight: 20 },
+              execution: { score: Number(s.score_execution || 90), weight: 20 },
+              culture: { score: Number(s.score_culture || 90), weight: 15 },
+              impact: { score: Number(s.score_impact || 90), weight: 10 },
+              sustainability: { score: Number(s.score_sustain || 90), weight: 10 },
+            },
+            total_score: Number(s.total_score || 90),
+            jury_notes: s.jury_notes || "",
+            scored_by: s.scored_by || "Jury",
+            scored_at: s.scored_at || "",
+          },
+          status: (s.status as any) || "approved",
+          submitted_at: s.submitted_at || new Date().toISOString(),
+        }))
+
+        const storedIds = new Set(formattedStored.map((s) => s.id))
+        const extras = extraSubmissions.filter((s) => !storedIds.has(s.id))
+        const all = [...extras, ...formattedStored]
+        setAllSubmissions(all)
+        
+        const initialVotes: Record<string, number> = {}
+        all.forEach(s => {
+          initialVotes[s.id] = (s.scorecard?.total_score as number) || 0
+        })
+        setVotes(initialVotes)
+      } catch (err) {
+        console.warn("Error loading submissions:", err)
+      }
+    }
+    loadData()
   }, [])
 
   const handleVote = async (submissionId: string) => {
     if (userVotedIds.has(submissionId)) return
 
-    await new Promise((resolve) => setTimeout(resolve, 300))
-
-    const success = castVote(submissionId)
+    const success = await castVote(submissionId)
     if (success) {
       setVotes((prev) => ({ ...prev, [submissionId]: (prev[submissionId] || 0) + 1 }))
-      setUserVotedIds((prev) => new Set([...prev, submissionId]))
+      setUserVotedIds((prev) => {
+        const next = new Set([...prev, submissionId])
+        localStorage.setItem("sl-awards-user-votes", JSON.stringify(Array.from(next)))
+        return next
+      })
     }
   }
 

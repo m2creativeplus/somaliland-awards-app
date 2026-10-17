@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { AssetCard } from "@/components/asset-card"
@@ -9,7 +9,18 @@ import { Button } from "@/components/ui/button"
 import type { Asset } from "@/lib/types"
 import { Grid, List } from "lucide-react"
 
-// Mock data - in real app this would come from API/database
+function extractText(val: unknown): string {
+  if (!val) return ""
+  if (typeof val === "string") return val
+  try {
+    const v = val as any
+    return v?.root?.children?.[0]?.children?.[0]?.text || ""
+  } catch {
+    return ""
+  }
+}
+
+// Fallback baseline assets
 const mockAssets: Asset[] = [
   {
     id: "1",
@@ -156,6 +167,7 @@ const mockAssets: Asset[] = [
 ]
 
 export default function LibraryPage() {
+  const [assets, setAssets] = useState<Asset[]>(mockAssets)
   const [filters, setFilters] = useState<FilterState>({
     search: "",
     type: "all",
@@ -166,8 +178,49 @@ export default function LibraryPage() {
   })
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
 
+  useEffect(() => {
+    async function loadLiveAssets() {
+      try {
+        const res = await fetch("/api/assets")
+        if (!res.ok) return
+        const data = await res.json()
+        if (data.docs && data.docs.length > 0) {
+          const liveAssets: Asset[] = data.docs.map((doc: any) => ({
+            id: String(doc.id),
+            name_en: doc.nameEn || doc.name_en || "Untitled Asset",
+            name_so: doc.nameSo || doc.name_so || "Astaanta",
+            type: doc.type || "logo",
+            owner: doc.owner || "SNPA",
+            date_created: doc.createdAt?.split("T")[0] || "2024-01-01",
+            colors: (doc.colors || []).map((c: any) => typeof c === "string" ? c : c.hex),
+            palette_tokens: (doc.paletteTokens || []).map((p: any) => typeof p === "string" ? p : p.token),
+            fonts: (doc.fonts || []).map((f: any) => typeof f === "string" ? f : f.fontName),
+            png_url: doc.pngFile?.url || (doc.pngFile?.filename ? `/api/media/file/${doc.pngFile.filename}` : "/somaliland-flag-with-green-white-red-stripes-and-s.jpg"),
+            tags: (doc.tags || []).map((t: any) => typeof t === "string" ? t : t.tag),
+            description_en: extractText(doc.descriptionEn || doc.description_en),
+            description_so: extractText(doc.descriptionSo || doc.description_so),
+            source_links: [],
+            iso_compliance: doc.isoCompliance || [],
+            awards_history: [],
+            license: doc.license || "public",
+            public_visibility: doc.publicVisibility ?? true,
+            metrics: doc.metrics || { views: 0, likes: 0, downloads: 0 },
+            verification: {
+              verified_by: doc.verification?.verifiedBy || "SNPA",
+              verified_date: doc.verification?.verifiedDate?.split("T")[0] || "2024-01-01",
+            },
+          }))
+          setAssets(liveAssets)
+        }
+      } catch (e) {
+        console.warn("Failed to load live assets, using baseline assets", e)
+      }
+    }
+    loadLiveAssets()
+  }, [])
+
   const filteredAssets = useMemo(() => {
-    let filtered = [...mockAssets]
+    let filtered = [...assets]
 
     // Search filter
     if (filters.search) {
@@ -221,7 +274,7 @@ export default function LibraryPage() {
     })
 
     return filtered
-  }, [filters])
+  }, [filters, assets])
 
   return (
     <div className="min-h-screen flex flex-col">

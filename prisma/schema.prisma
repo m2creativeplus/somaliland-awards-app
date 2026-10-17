@@ -1,0 +1,69 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./awards.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Asset {
+  id              String   @id @default(uuid())
+  name_en         String
+  name_so         String
+  type            String
+  owner           String
+  date_created    String
+  colors          String
+  palette_tokens  String
+  fonts           String
+  svg_url         String?
+  png_url         String?
+  tags            String
+  description_en  String
+  description_so  String
+  source_links    String
+  iso_compliance  String
+  license         String
+  public_vis      Boolean  @default(true)
+  metrics_views   Int      @default(0)
+  metrics_likes   Int      @default(0)
+  metrics_dl      Int      @default(0)
+  verified_by     String?
+  verified_date   String?
+
+  submissions     Submission[]
+}
+
+model Submission {
+  id              String   @id @default(uuid())
+  asset_id        String
+  asset           Asset    @relation(fields: [asset_id], references: [id])
+  entrant_name    String
+  entrant_email   String
+  entrant_org     String?
+  entrant_country String
+  category        String
+  entry_fee_paid  Boolean  @default(false)
+  file_original   String
+  file_preview    String
+  file_variants   String?
+  title           String
+  description     String
+  inspiration     String
+  tools_used      String
+  
+  score_creativity Float?
+  score_functional Float?
+  score_execution  Float?
+  score_culture    Float?
+  score_impact     Float?
+  score_sustain    Float?
+  total_score      Float?
+  jury_notes       String?
+  scored_by        String?
+  scored_at        String?
+  
+  status          String
+  submitted_at    String
+}
