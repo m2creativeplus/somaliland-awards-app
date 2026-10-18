@@ -1,14 +1,37 @@
+"use client"
+
+import { useEffect, useState } from "react"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { Card, CardContent } from "@/components/ui/card"
 import { Scale, CheckCircle2, ShieldAlert, Award, FileText } from "lucide-react"
 
-export const metadata = {
-  title: "Terms of Use | Republic of Somaliland National Brand Awards",
-  description: "Official legal terms and conditions governing participation, licensing, voting, and submission intellectual property.",
-}
-
 export default function TermsPage() {
+  const [governance, setGovernance] = useState({
+    termsTitle: "Terms of Use & Submission Agreement",
+    termsSummary: "Standard operating agreement for designers, voters, and participating institutions across the Republic of Somaliland Brand Awards platform.",
+  })
+
+  useEffect(() => {
+    async function loadTerms() {
+      try {
+        const res = await fetch("/api/settings")
+        if (res.ok) {
+          const data = await res.json()
+          if (data.governance?.termsTitle) {
+            setGovernance({
+              termsTitle: data.governance.termsTitle,
+              termsSummary: data.governance.termsSummary || governance.termsSummary,
+            })
+          }
+        }
+      } catch (err) {
+        // Graceful fallback
+      }
+    }
+    loadTerms()
+  }, [])
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <SiteHeader />
@@ -21,10 +44,10 @@ export default function TermsPage() {
               <Scale className="w-3.5 h-3.5" /> Legal Terms of Service
             </div>
             <h1 className="text-3xl md:text-5xl font-heading font-bold text-foreground tracking-tight">
-              Terms of Use & Submission Agreement
+              {governance.termsTitle}
             </h1>
             <p className="text-muted-foreground text-sm md:text-base leading-relaxed">
-              Standard operating agreement for designers, voters, and participating institutions across the Republic of Somaliland Brand Awards platform.
+              {governance.termsSummary}
             </p>
           </div>
 

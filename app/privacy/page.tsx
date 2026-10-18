@@ -1,14 +1,37 @@
+"use client"
+
+import { useEffect, useState } from "react"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { Card, CardContent } from "@/components/ui/card"
 import { ShieldCheck, Lock, Eye, FileText, CheckCircle2 } from "lucide-react"
 
-export const metadata = {
-  title: "Privacy Policy | Republic of Somaliland National Brand Awards",
-  description: "Official data protection and privacy policy governing design entries, public voting records, and intellectual property.",
-}
-
 export default function PrivacyPage() {
+  const [governance, setGovernance] = useState({
+    privacyTitle: "Privacy & Data Protection Policy",
+    privacySummary: "Promulgated under the authority of the National Planning Authority, Republic of Somaliland.",
+  })
+
+  useEffect(() => {
+    async function loadPrivacy() {
+      try {
+        const res = await fetch("/api/settings")
+        if (res.ok) {
+          const data = await res.json()
+          if (data.governance?.privacyTitle) {
+            setGovernance({
+              privacyTitle: data.governance.privacyTitle,
+              privacySummary: data.governance.privacySummary || governance.privacySummary,
+            })
+          }
+        }
+      } catch (err) {
+        // Fallback
+      }
+    }
+    loadPrivacy()
+  }, [])
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <SiteHeader />
@@ -21,10 +44,10 @@ export default function PrivacyPage() {
               <ShieldCheck className="w-3.5 h-3.5" /> Official Governance Document
             </div>
             <h1 className="text-3xl md:text-5xl font-heading font-bold text-foreground tracking-tight">
-              Privacy & Data Protection Policy
+              {governance.privacyTitle}
             </h1>
             <p className="text-muted-foreground text-sm md:text-base leading-relaxed">
-              Effective Date: January 1, 2026 · Promulgated under the authority of the National Planning Authority, Republic of Somaliland.
+              {governance.privacySummary}
             </p>
           </div>
 

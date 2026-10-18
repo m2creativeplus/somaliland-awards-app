@@ -1,3 +1,6 @@
+"use client"
+
+import { useEffect, useState } from "react"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
@@ -5,11 +8,6 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { BookOpen, Palette, Type, Shield, Download, CheckCircle2, AlertTriangle, Layers } from "lucide-react"
 import Link from "next/link"
-
-export const metadata = {
-  title: "Brand Guidelines | Republic of Somaliland National Brand Awards",
-  description: "Official visual identity standards, color palettes, heraldic coat of arms rules, and design specifications for national brand entries.",
-}
 
 const colorSwatches = [
   { name: "Somaliland National Green", hex: "#1B5E20", rgb: "RGB(27, 94, 32)", role: "Primary / Sovereignty & Prosperity" },
@@ -26,6 +24,31 @@ const typographySpecs = [
 ]
 
 export default function GuidelinesPage() {
+  const [governance, setGovernance] = useState({
+    guidelinesTitle: "Somaliland Brand Guidelines",
+    guidelinesSummary: "Standardized design principles, official color systems, typography specifications, and heraldic emblem protocols governing all national design submissions and institutional assets.",
+  })
+
+  useEffect(() => {
+    async function loadGuidelines() {
+      try {
+        const res = await fetch("/api/settings")
+        if (res.ok) {
+          const data = await res.json()
+          if (data.governance?.guidelinesTitle) {
+            setGovernance({
+              guidelinesTitle: data.governance.guidelinesTitle,
+              guidelinesSummary: data.governance.guidelinesSummary || governance.guidelinesSummary,
+            })
+          }
+        }
+      } catch (err) {
+        // Fallback
+      }
+    }
+    loadGuidelines()
+  }, [])
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <SiteHeader />
@@ -38,10 +61,10 @@ export default function GuidelinesPage() {
               <BookOpen className="w-3.5 h-3.5" /> Official Gazette Specification
             </div>
             <h1 className="text-3xl md:text-5xl font-heading font-bold text-foreground tracking-tight">
-              Somaliland Brand Guidelines
+              {governance.guidelinesTitle}
             </h1>
             <p className="text-muted-foreground text-base md:text-lg max-w-3xl leading-relaxed">
-              Standardized design principles, official color systems, typography specifications, and heraldic emblem protocols governing all national design submissions and institutional assets.
+              {governance.guidelinesSummary}
             </p>
           </div>
 

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
@@ -21,6 +21,30 @@ export default function ContactPage() {
     subject: "",
     message: "",
   })
+  const [settings, setSettings] = useState({
+    email: "awards@somaliland-gov.org",
+    address: "Sha'ab Area, Near Ministry Complex, Hargeisa, Republic of Somaliland",
+    hours: "Sunday – Thursday: 08:00 – 15:00 (EAT)",
+  })
+
+  useEffect(() => {
+    async function fetchSettings() {
+      try {
+        const res = await fetch("/api/settings")
+        if (res.ok) {
+          const data = await res.json()
+          setSettings({
+            email: data.contact?.email || "awards@somaliland-gov.org",
+            address: data.governance?.secretariatAddress || "Sha'ab Area, Near Ministry Complex, Hargeisa, Republic of Somaliland",
+            hours: data.governance?.workingHours || "Sunday – Thursday: 08:00 – 15:00 (EAT)",
+          })
+        }
+      } catch (e) {
+        // Fallback
+      }
+    }
+    fetchSettings()
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -172,9 +196,8 @@ export default function ContactPage() {
                     <MapPin className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                     <div>
                       <p className="font-semibold text-foreground">National Planning Authority (SNPA)</p>
-                      <p className="text-muted-foreground text-xs mt-0.5">
-                        Sha'ab Area, Near Ministry Complex<br />
-                        Hargeisa, Republic of Somaliland
+                      <p className="text-muted-foreground text-xs mt-0.5 whitespace-pre-line">
+                        {settings.address}
                       </p>
                     </div>
                   </div>
@@ -184,7 +207,7 @@ export default function ContactPage() {
                     <div>
                       <p className="font-semibold text-foreground">Secretariat Inquiries</p>
                       <p className="text-muted-foreground text-xs mt-0.5 font-mono">
-                        awards@somaliland-gov.org
+                        {settings.email}
                       </p>
                     </div>
                   </div>
@@ -194,8 +217,7 @@ export default function ContactPage() {
                     <div>
                       <p className="font-semibold text-foreground">Working Hours</p>
                       <p className="text-muted-foreground text-xs mt-0.5">
-                        Sunday – Thursday: 08:00 – 15:00 (EAT)<br />
-                        Friday – Saturday: Closed
+                        {settings.hours}
                       </p>
                     </div>
                   </div>

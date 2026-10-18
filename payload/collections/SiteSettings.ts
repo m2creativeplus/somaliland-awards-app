@@ -89,5 +89,21 @@ export const SiteSettings: GlobalConfig = {
         { name: 'notifyEntrantOnApproval', type: 'checkbox', defaultValue: true },
       ],
     },
+    // Governance & Legal Content
+    {
+      type: 'group',
+      name: 'governance',
+      label: 'Governance & Legal Content',
+      fields: [
+        { name: 'termsTitle', type: 'text', defaultValue: 'Terms of Use & Submission Agreement' },
+        { name: 'termsSummary', type: 'textarea', defaultValue: 'Standard operating agreement for designers, voters, and participating institutions across the Republic of Somaliland Brand Awards platform.' },
+        { name: 'privacyTitle', type: 'text', defaultValue: 'Privacy & Data Protection Policy' },
+        { name: 'privacySummary', type: 'textarea', defaultValue: 'Promulgated under the authority of the National Planning Authority, Republic of Somaliland.' },
+        { name: 'guidelinesTitle', type: 'text', defaultValue: 'Somaliland Brand Guidelines' },
+        { name: 'guidelinesSummary', type: 'textarea', defaultValue: 'Standardized design principles, official color systems, typography specifications, and heraldic emblem protocols governing all national design submissions and institutional assets.' },
+        { name: 'secretariatAddress', type: 'textarea', defaultValue: "Sha'ab Area, Near Ministry Complex, Hargeisa, Republic of Somaliland" },
+        { name: 'workingHours', type: 'text', defaultValue: 'Sunday – Thursday: 08:00 – 15:00 (EAT)' },
+      ],
+    },
   ],
 }
