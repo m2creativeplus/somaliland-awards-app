@@ -1,0 +1,12 @@
+/* TEAM */
+  Strategic Architecture & Engineering: Mahmoud Mohamed Awaleh
+  Organization: M2 Creative & Consulting
+  Website: https://m2creative.site/
+  Personal Portfolio: https://m2awaleh.vercel.app/
+  Location: Hargeisa, Republic of Somaliland
+
+/* SITE */
+  Standards: HTML5, CSS3, ES2024, TypeScript, WCAG 2.2 AA
+  Frameworks: Next.js 14 (App Router), Tailwind CSS
+  Deployment: Hostinger Shared Hosting (PHP 8.2+ / MySQL) & Vercel
+  Language: Somali (Default), English (Secondary)

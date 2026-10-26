@@ -1,246 +1,339 @@
-import { SiteHeader } from "@/components/site-header"
-import { SiteFooter } from "@/components/site-footer"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { ArrowRight, Award, Database, Users, Zap, Shield, BookOpen, Trophy } from "lucide-react"
+"use client"
+
+import { useState, useEffect } from "react"
 import Link from "next/link"
+import { WeddingHeader } from "@/components/weddings/wedding-header"
+import { WeddingFooter } from "@/components/weddings/wedding-footer"
+import { ProviderCard } from "@/components/weddings/provider-card"
+import { PublicEventCard } from "@/components/weddings/public-event-card"
+import { ResourceTemplateCard } from "@/components/weddings/resource-template-card"
+import { MarketIntelligenceDashboard } from "@/components/weddings/market-intelligence-dashboard"
+import { WeddingStore, BrandingSettings } from "@/lib/weddings/store"
+import { HARGEISA_PROVIDERS, PUBLIC_EVENTS, RESOURCE_TEMPLATES } from "@/lib/weddings/mock-data"
+import { TRANSLATIONS } from "@/lib/weddings/translations"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge"
+import {
+  Search,
+  Sparkles,
+  ShieldCheck,
+  CheckCircle2,
+  Calendar,
+  Users,
+  DollarSign,
+  ArrowRight,
+  Building2,
+  Camera,
+  Palette,
+  UtensilsCrossed,
+  Crown,
+  ClipboardList,
+  Flame,
+  Award,
+} from "lucide-react"
 
-export default function HomePage() {
-  const features = [
-    {
-      icon: Database,
-      title: "Asset Library",
-      description: "Comprehensive collection of official Somaliland visual assets, logos, and brand materials.",
-      href: "/library",
-      color: "from-emerald-500/20 to-emerald-600/10",
-      iconColor: "text-emerald-600",
-    },
-    {
-      icon: Award,
-      title: "Brand Awards",
-      description: "Annual competition celebrating excellence in Somaliland brand design and visual identity.",
-      href: "/awards",
-      color: "from-amber-500/20 to-amber-600/10",
-      iconColor: "text-amber-600",
-    },
-    {
-      icon: Users,
-      title: "Community Voting",
-      description: "Public participation in selecting the most impactful designs through democratic voting.",
-      href: "/vote",
-      color: "from-blue-500/20 to-blue-600/10",
-      iconColor: "text-blue-600",
-    },
-    {
-      icon: Zap,
-      title: "AI-Powered Scoring",
-      description: "Advanced algorithms evaluate submissions based on creativity, functionality, and cultural relevance.",
-      href: "/rankings",
-      color: "from-purple-500/20 to-purple-600/10",
-      iconColor: "text-purple-600",
-    },
+export default function WeddingsHomePage() {
+  const [lang, setLang] = useState<"so" | "en">("so")
+  const [branding, setBranding] = useState<BrandingSettings | null>(null)
+  const [selectedCategory, setSelectedCategory] = useState<string>("all")
+  const [searchQuery, setSearchQuery] = useState("")
+
+  useEffect(() => {
+    setLang(WeddingStore.getLanguage())
+    setBranding(WeddingStore.getBranding())
+
+    const handleLangChange = () => {
+      setLang(WeddingStore.getLanguage())
+    }
+    window.addEventListener("languagechange", handleLangChange)
+    return () => window.removeEventListener("languagechange", handleLangChange)
+  }, [])
+
+  const t = TRANSLATIONS[lang]
+  const providers = HARGEISA_PROVIDERS
+
+  const categoryChips = [
+    { id: "all", label: t.catAll, icon: Sparkles },
+    { id: "venues", label: t.catVenues, icon: Building2 },
+    { id: "photography", label: t.catPhotography, icon: Camera },
+    { id: "decor", label: t.catDecor, icon: Palette },
+    { id: "catering", label: t.catCatering, icon: UtensilsCrossed },
+    { id: "bridal", label: t.catBridal, icon: Crown },
+    { id: "planners", label: t.catPlanners, icon: ClipboardList },
   ]
 
-  const stats = [
-    { label: "Visual Assets", value: "2,847", icon: Database },
-    { label: "Award Submissions", value: "156", icon: Award },
-    { label: "Community Votes", value: "12,394", icon: Users },
-    { label: "Active Designers", value: "89", icon: Trophy },
-  ]
-
-  const highlights = [
-    {
-      icon: Shield,
-      title: "Official Government Platform",
-      description: "Endorsed by the Republic of Somaliland Ministry of Information",
-    },
-    {
-      icon: BookOpen,
-      title: "ISO-Compliant Assets",
-      description: "All assets verified against international standards for proper use",
-    },
-    {
-      icon: Trophy,
-      title: "$9,000 in Prizes",
-      description: "Annual awards across five design categories with cash prizes",
-    },
-  ]
+  const filteredProviders = providers.filter((p) => {
+    const matchesCat = selectedCategory === "all" || p.category === selectedCategory
+    const name = lang === "so" ? p.businessNameSo : p.businessNameEn
+    const matchesSearch =
+      searchQuery === "" ||
+      name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.district.toLowerCase().includes(searchQuery.toLowerCase())
+    return matchesCat && matchesSearch
+  })
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <SiteHeader />
+    <div className="min-h-screen flex flex-col bg-background text-foreground">
+      <WeddingHeader />
 
       <main className="flex-1">
-        {/* ── Hero Section ── */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-[#1B5E20] via-[#2E7D32] to-[#1B5E20] py-24 lg:py-36">
-          {/* Background decorations */}
-          <div
-            className="absolute inset-0 opacity-[0.07]"
-            style={{
-              backgroundImage:
-                "radial-gradient(circle at 15% 85%, #CFA93F 0%, transparent 55%), radial-gradient(circle at 85% 10%, #ffffff 0%, transparent 55%), radial-gradient(circle at 50% 50%, #C62828 0%, transparent 70%)",
-            }}
-          />
-          <div className="absolute inset-0 opacity-5" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")" }} />
+        {/* Government / Awards Platform Integration Banner */}
+        <div className="bg-emerald-950 text-emerald-100 text-xs py-2 px-4 border-b border-emerald-900/50">
+          <div className="container flex flex-wrap items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>
+                {lang === "so"
+                  ? "Madasha Rasmiga ah ee Aroosyada Somaliland · Waxaa Maamula M2 Creative"
+                  : "Official Somaliland Weddings Platform · Operated by M2 Creative & Consulting"}
+              </span>
+            </div>
+            <div className="flex items-center gap-3">
+              <Link href="/library" className="underline hover:text-emerald-300 font-medium flex items-center gap-1">
+                <Award className="h-3 w-3" />
+                <span>{lang === "so" ? "Maktabadda Hiddaha & Naqshadaha" : "National Brand Awards & Assets"}</span>
+              </Link>
+            </div>
+          </div>
+        </div>
 
-          <div className="container relative">
-            <div className="max-w-4xl mx-auto text-center space-y-8">
-              <div className="animate-fade-up">
-                <Badge className="bg-[#CFA93F]/20 text-[#CFA93F] border-[#CFA93F]/40 border mb-6 text-sm px-4 py-1.5">
-                  <Shield className="w-3 h-3 mr-1.5" />
-                  Official Government Platform — Republic of Somaliland
+        {/* Hero Section */}
+        <section className="relative overflow-hidden py-16 md:py-24 bg-gradient-to-b from-amber-500/10 via-background to-background">
+          <div className="container relative z-10 max-w-5xl text-center space-y-6">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs font-semibold shadow-xs">
+              <Sparkles className="h-3.5 w-3.5 text-amber-600" />
+              <span>{t.heroBadge}</span>
+            </div>
+
+            <h1 className="text-4xl md:text-6xl font-extrabold font-heading tracking-tight text-foreground leading-[1.15]">
+              {t.heroTitle}
+            </h1>
+
+            <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              {t.heroSubtitle}
+            </p>
+
+            {/* Quick Action CTAs */}
+            <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+              <Button asChild size="lg" className="bg-amber-600 hover:bg-amber-700 text-white font-semibold text-sm shadow-md gap-2">
+                <Link href="/providers">
+                  <span>{t.heroCtaFind}</span>
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="lg" className="text-sm font-semibold border-amber-600/30 hover:bg-amber-500/10 gap-2">
+                <Link href="/packages/compare">
+                  <span>{t.heroCtaCompare}</span>
+                </Link>
+              </Button>
+              <Button asChild variant="secondary" size="lg" className="text-sm font-semibold gap-2">
+                <Link href="/plan">
+                  <ClipboardList className="h-4 w-4 text-amber-600" />
+                  <span>{t.heroCtaPlan}</span>
+                </Link>
+              </Button>
+            </div>
+
+            {/* Live Search Bar */}
+            <div className="pt-8 max-w-3xl mx-auto">
+              <div className="p-2 sm:p-3 rounded-2xl border bg-card/90 backdrop-blur shadow-lg flex flex-col sm:flex-row gap-2">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder={t.searchPlaceholder}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-10 h-11 text-xs sm:text-sm border-0 bg-transparent focus-visible:ring-0"
+                  />
+                </div>
+                <Button className="bg-amber-600 hover:bg-amber-700 text-white h-11 px-6 font-semibold shrink-0 gap-2">
+                  <Search className="h-4 w-4" />
+                  <span>{lang === "so" ? "Raadi" : "Search"}</span>
+                </Button>
+              </div>
+            </div>
+
+            {/* Stats row */}
+            <div className="pt-10 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto text-left">
+              <div className="p-4 rounded-xl border bg-card shadow-xs">
+                <div className="text-2xl font-bold font-heading text-foreground">48</div>
+                <div className="text-xs text-muted-foreground mt-0.5">{t.statProviders}</div>
+              </div>
+              <div className="p-4 rounded-xl border bg-card shadow-xs">
+                <div className="text-2xl font-bold font-heading text-foreground">6</div>
+                <div className="text-xs text-muted-foreground mt-0.5">{t.statCategories}</div>
+              </div>
+              <div className="p-4 rounded-xl border bg-card shadow-xs">
+                <div className="text-2xl font-bold font-heading text-foreground">2.4h</div>
+                <div className="text-xs text-muted-foreground mt-0.5">{t.statAvgLeadTime}</div>
+              </div>
+              <div className="p-4 rounded-xl border bg-card shadow-xs">
+                <div className="text-2xl font-bold font-heading text-emerald-600 flex items-center gap-1">
+                  <ShieldCheck className="h-5 w-5" />
+                  <span>100%</span>
+                </div>
+                <div className="text-xs text-muted-foreground mt-0.5">{t.statVerifiedBadge}</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Category Pills & Verified Directory Showcase */}
+        <section className="py-12 border-t bg-muted/20">
+          <div className="container space-y-8">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+              <div className="space-y-1">
+                <Badge variant="outline" className="text-amber-700 dark:text-amber-400 border-amber-600/30 text-[11px] font-semibold">
+                  {lang === "so" ? "Shirkadaha La Hubiyay" : "Verified Merchants"}
                 </Badge>
-              </div>
-
-              <div className="animate-fade-up-delay-1">
-                <h1 className="text-4xl lg:text-6xl xl:text-7xl font-heading text-white leading-tight">
-                  Somaliland Visual Assets &amp;{" "}
-                  <span className="text-[#CFA93F]">Brand Awards</span>
-                </h1>
-              </div>
-
-              <div className="animate-fade-up-delay-2">
-                <p className="text-xl text-white/75 text-pretty max-w-2xl mx-auto leading-relaxed">
-                  The official repository of the Republic of Somaliland's visual identity. Discover, submit, and
-                  celebrate the designs that represent our nation's heritage and future.
+                <h2 className="text-2xl md:text-3xl font-bold font-heading">
+                  {t.directoryTitle}
+                </h2>
+                <p className="text-xs md:text-sm text-muted-foreground">
+                  {t.directorySubtitle}
                 </p>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-up-delay-3">
-                <Button
-                  size="lg"
-                  className="bg-[#CFA93F] hover:bg-[#B89230] text-black font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5"
-                  asChild
-                >
-                  <Link href="/library">
-                    Explore Library
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-white/40 text-white hover:bg-white/10 bg-transparent hover:-translate-y-0.5 transition-all"
-                  asChild
-                >
-                  <Link href="/submit">Submit Your Design</Link>
-                </Button>
-              </div>
-            </div>
-          </div>
-
-          {/* Bottom fade */}
-          <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-background to-transparent" />
-        </section>
-
-        {/* ── Stats Section ── */}
-        <section className="py-16 border-b bg-muted/20">
-          <div className="container">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-              {stats.map((stat, index) => (
-                <div key={index} className="text-center space-y-2 animate-fade-up" style={{ animationDelay: `${index * 0.1}s` }}>
-                  <div className="text-3xl lg:text-4xl font-heading text-[#1B5E20]">{stat.value}</div>
-                  <div className="text-sm text-muted-foreground font-medium">{stat.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── Features Section ── */}
-        <section className="py-24">
-          <div className="container">
-            <div className="text-center space-y-4 mb-16">
-              <Badge variant="outline" className="border-[#1B5E20]/30 text-[#1B5E20]">Platform Features</Badge>
-              <h2 className="text-3xl lg:text-4xl font-heading">Everything in One Place</h2>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Discover, contribute to, and celebrate Somaliland's visual identity through our unified platform.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {features.map((feature, index) => (
-                <Card
-                  key={index}
-                  className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden border"
-                >
-                  <div className={`h-1 bg-gradient-to-r from-[#1B5E20] to-[#CFA93F]`} />
-                  <CardHeader className="pb-3">
-                    <div
-                      className={`h-12 w-12 rounded-xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-200`}
-                    >
-                      <feature.icon className={`h-6 w-6 ${feature.iconColor}`} />
-                    </div>
-                    <CardTitle className="text-lg">{feature.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <CardDescription className="mb-4 leading-relaxed">{feature.description}</CardDescription>
-                    <Button variant="ghost" size="sm" asChild className="p-0 h-auto group/btn">
-                      <Link href={feature.href} className="text-[#1B5E20] hover:text-[#1B5E20]/80 flex items-center">
-                        Learn more{" "}
-                        <ArrowRight className="ml-1 h-3 w-3 group-hover/btn:translate-x-1 transition-transform" />
-                      </Link>
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── Highlights / Why Us ── */}
-        <section className="py-16 bg-muted/30 border-y">
-          <div className="container">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {highlights.map((item, index) => (
-                <div key={index} className="flex items-start gap-4">
-                  <div className="h-10 w-10 rounded-lg bg-[#1B5E20]/10 flex items-center justify-center flex-shrink-0">
-                    <item.icon className="h-5 w-5 text-[#1B5E20]" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold mb-1">{item.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{item.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── CTA Section ── */}
-        <section className="py-24 bg-gradient-to-br from-[#1B5E20] to-[#2E7D32] text-white overflow-hidden relative">
-          <div
-            className="absolute inset-0 opacity-10"
-            style={{ backgroundImage: "radial-gradient(circle at 80% 50%, #CFA93F 0%, transparent 60%)" }}
-          />
-          <div className="container text-center space-y-8 relative">
-            <h2 className="text-3xl lg:text-4xl font-heading">Ready to Contribute?</h2>
-            <p className="text-xl text-white/80 max-w-2xl mx-auto">
-              Join designers, government officials, and citizens shaping Somaliland's visual future.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                size="lg"
-                className="bg-[#CFA93F] hover:bg-[#B89230] text-black font-semibold shadow-lg"
-                asChild
-              >
-                <Link href="/submit">Submit Your Design <ArrowRight className="ml-2 h-4 w-4" /></Link>
+              <Button asChild variant="outline" size="sm" className="text-xs h-9 gap-1 font-semibold">
+                <Link href="/providers">
+                  <span>{lang === "so" ? "Eeg Dhammaan Shirkadaha" : "Browse All Providers"}</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
               </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-white/40 text-white hover:bg-white/10 bg-transparent"
-                asChild
-              >
-                <Link href="/awards">View Awards</Link>
+            </div>
+
+            {/* Category selection */}
+            <div className="flex flex-wrap items-center gap-2">
+              {categoryChips.map((chip) => {
+                const Icon = chip.icon
+                const isSelected = selectedCategory === chip.id
+                return (
+                  <Button
+                    key={chip.id}
+                    variant={isSelected ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setSelectedCategory(chip.id)}
+                    className={`h-9 gap-2 text-xs font-medium ${
+                      isSelected
+                        ? "bg-amber-600 hover:bg-amber-700 text-white font-semibold shadow-xs"
+                        : "hover:bg-muted text-muted-foreground"
+                    }`}
+                  >
+                    <Icon className="h-3.5 w-3.5" />
+                    <span>{chip.label}</span>
+                  </Button>
+                )
+              })}
+            </div>
+
+            {/* Providers Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredProviders.slice(0, 6).map((provider) => (
+                <ProviderCard key={provider.id} provider={provider} lang={lang} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Featured Public Events Showcase */}
+        <section className="py-12 border-t">
+          <div className="container space-y-6">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+              <div className="space-y-1">
+                <Badge className="bg-amber-600 text-white text-[10px] font-bold">
+                  {lang === "so" ? "Xafladaha & Bandhigyada Guud" : "Public Expos & Showcases"}
+                </Badge>
+                <h2 className="text-2xl font-bold font-heading">
+                  {lang === "so" ? "Bandhigyada Aroosyada ee Hargeysa" : "Upcoming Somaliland Wedding Expos"}
+                </h2>
+                <p className="text-xs text-muted-foreground">
+                  {lang === "so" ? "Munaasabadaha guud ee lagu barto shirkadaha laguna helo qiimo dhimista gaarka ah." : "Meet verified merchants, watch live bridal runway shows, and access exclusive platform booking discounts."}
+                </p>
+              </div>
+
+              <Button asChild variant="outline" size="sm" className="text-xs h-9">
+                <Link href="/events">{lang === "so" ? "Dhammaan Xafladaha" : "View All Events"}</Link>
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {PUBLIC_EVENTS.map((evt) => (
+                <PublicEventCard key={evt.id} event={evt} lang={lang} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Free Reusable Wedding Templates */}
+        <section className="py-12 border-t bg-muted/20">
+          <div className="container space-y-6">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+              <div className="space-y-1">
+                <Badge variant="outline" className="text-amber-700 dark:text-amber-400 border-amber-600/30 text-[10px] font-bold">
+                  {lang === "so" ? "Foomam & Xisaabiyeyaal Bilaash ah" : "Free Planning Assets"}
+                </Badge>
+                <h2 className="text-2xl font-bold font-heading">{t.resourcesTitle}</h2>
+                <p className="text-xs text-muted-foreground">{t.resourcesSubtitle}</p>
+              </div>
+
+              <Button asChild variant="outline" size="sm" className="text-xs h-9">
+                <Link href="/resources">{lang === "so" ? "Eeg Dhammaan Kheyraadka (15)" : "Browse All 15 Templates"}</Link>
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {RESOURCE_TEMPLATES.slice(0, 3).map((template) => (
+                <ResourceTemplateCard key={template.id} template={template} lang={lang} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Market Intelligence Preview */}
+        <section className="py-12 border-t">
+          <div className="container space-y-6">
+            <div className="space-y-1">
+              <Badge className="bg-emerald-600 text-white text-[10px] font-bold">
+                {lang === "so" ? "Xogta & Tirakoobka Rasmiga ah" : "Market Intelligence"}
+              </Badge>
+              <h2 className="text-2xl font-bold font-heading">{t.insightsTitle}</h2>
+              <p className="text-xs text-muted-foreground">{t.insightsSubtitle}</p>
+            </div>
+
+            <MarketIntelligenceDashboard lang={lang} />
+          </div>
+        </section>
+
+        {/* Provider Onboarding CTA */}
+        <section className="py-16 border-t bg-gradient-to-r from-amber-700 via-amber-600 to-amber-800 text-white">
+          <div className="container max-w-4xl text-center space-y-5">
+            <Badge className="bg-white/20 text-white border-0 text-xs font-semibold backdrop-blur">
+              {lang === "so" ? "Ma leedahay Hool, Sawir-qaade, ama Cunto-kariye?" : "Are You a Wedding Service Provider?"}
+            </Badge>
+            <h2 className="text-3xl md:text-4xl font-extrabold font-heading">
+              {lang === "so"
+                ? "Diiwaangeli Ganacsigaaga oo Hel Macaamiil La Xaqiijiyay"
+                : "List Your Business & Receive Qualified Wedding Inquiries"}
+            </h2>
+            <p className="text-sm md:text-base text-amber-100 max-w-2xl mx-auto leading-relaxed">
+              {lang === "so"
+                ? "Ku biir madasha koowaad ee aroosyada Somaliland. Hel bog gaar ah, soo bandhig xirmooyinkaaga, kuna hel dalabaadka tooska ah WhatsApp-kaaga."
+                : "Join Somaliland's premier wedding ecosystem. Claim your professional storefront, publish packages, and manage bookings with complete independence."}
+            </p>
+            <div className="pt-2 flex flex-wrap justify-center gap-3">
+              <Button asChild size="lg" className="bg-white text-amber-900 hover:bg-amber-50 font-bold text-sm shadow-md">
+                <Link href="/admin/settings">{lang === "so" ? "Ku Biir Ganacsi Ahaan" : "Register Your Business"}</Link>
+              </Button>
+              <Button asChild variant="outline" size="lg" className="border-white/40 text-white hover:bg-white/10 text-sm font-semibold">
+                <Link href="/guidelines">{lang === "so" ? "Akhriso Xeerarka" : "View Merchant Standards"}</Link>
               </Button>
             </div>
           </div>
         </section>
       </main>
 
-      <SiteFooter />
+      <WeddingFooter />
     </div>
   )
 }

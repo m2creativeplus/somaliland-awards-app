@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "1.0",
+  "organization": {
+    "name": "M2 Creative & Consulting",
+    "website": "https://m2creative.site/",
+    "tagline": "Strategy. Research. Project Development.",
+    "positioning": "Strategic Digital Transformation • Creative Technology • Institutional Intelligence",
+    "principles": [
+      "Design is Policy.",
+      "Build > Plan."
+    ],
+    "copyright": "© 2026 M2 Creative & Consulting. All rights reserved."
+  },
+  "personalBrand": {
+    "name": "Mahmoud Mohamed Awaleh",
+    "website": "https://m2awaleh.vercel.app/",
+    "linkedin": "https://linkedin.com/in/mahmoudawaleh",
+    "x": "https://twitter.com/m2creative"
+  },
+  "project": {
+    "name": "Somaliland Weddings & Events and National Brand Digital Platform",
+    "description": "Full-stack marketplace, event planning workspace, market intelligence portal, and national brand assets management system engineered for the Republic of Somaliland.",
+    "website": "https://weddings.m2creative.sl",
+    "repository": "https://github.com/m2creativeplus/somaliland-awards-app",
+    "owner": "M2 Creative & Consulting",
+    "maintainer": "Mahmoud Mohamed Awaleh",
+    "license": "Proprietary — M2 Creative & Consulting. All rights reserved.",
+    "deployment": {
+      "primary": "Hostinger Shared Hosting (PHP 8.2+ / MySQL)",
+      "cloud": "Vercel (Next.js 14 App Router)"
+    }
+  },
+  "attribution": {
+    "enabled": true,
+    "text": "Built by M2 Creative & Consulting",
+    "url": "https://m2creative.site/"
+  }
+}

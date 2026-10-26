@@ -9,10 +9,14 @@ import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { Save, CheckCircle2, Shield, Settings2, Building, Scale, Sparkles } from "lucide-react"
 
+import { AdminWeddingsControlPlane } from "@/components/weddings/admin-weddings-control-plane"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+
 export default function AdminSettingsPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [savedSuccess, setSavedSuccess] = useState(false)
+  const [activeSuite, setActiveSuite] = useState("weddings")
 
   const [form, setForm] = useState({
     siteName: "Somaliland Visual Assets & Awards",
@@ -154,7 +158,22 @@ export default function AdminSettingsPage() {
         </div>
       )}
 
-      <form onSubmit={handleSave} className="space-y-8">
+      <Tabs value={activeSuite} onValueChange={setActiveSuite} className="space-y-6">
+        <TabsList className="grid grid-cols-2 max-w-md h-10 p-1">
+          <TabsTrigger value="weddings" className="text-xs font-semibold">
+            Weddings & Events Suite
+          </TabsTrigger>
+          <TabsTrigger value="governance" className="text-xs font-semibold">
+            Awards Governance
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="weddings" className="space-y-6">
+          <AdminWeddingsControlPlane />
+        </TabsContent>
+
+        <TabsContent value="governance" className="space-y-6">
+          <form onSubmit={handleSave} className="space-y-8">
         {/* Branding & Brand Tokens */}
         <Card>
           <CardHeader>
@@ -364,6 +383,8 @@ export default function AdminSettingsPage() {
           </Button>
         </div>
       </form>
-    </div>
-  )
+      </TabsContent>
+    </Tabs>
+  </div>
+)
 }

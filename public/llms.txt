@@ -1,0 +1,26 @@
+# Somaliland Weddings & Events
+
+> The premier verified wedding marketplace, event operating platform, and market intelligence suite in the Republic of Somaliland.
+> Built & Engineered by M2 Creative & Consulting (Hargeisa, Republic of Somaliland).
+
+## Overview
+- Organization: M2 Creative & Consulting (https://m2creative.site/)
+- Lead Creator: Mahmoud Mohamed Awaleh (https://m2awaleh.vercel.app/)
+- Primary Launch Market: Hargeisa, Republic of Somaliland
+- Regional Service Coverage: Hargeisa, Borama (Awdal), Berbera (Sahil Coast), Burao (Togdheer)
+- Dual Stacks: Next.js 14 App Router + Hostinger Standalone PHP 8.2+ & MySQL
+
+## Key Public Routes
+- Homepage: https://weddings.m2creative.sl/
+- Provider Directory: https://weddings.m2creative.sl/providers
+- Service Packages: https://weddings.m2creative.sl/packages
+- Package Comparison Matrix: https://weddings.m2creative.sl/compare
+- Event Planning Workspace & Budget Calculator: https://weddings.m2creative.sl/plan
+- Public Expos & Bridal Showcases: https://weddings.m2creative.sl/events
+- Resource Library & Verified Contracts: https://weddings.m2creative.sl/resources
+- Market Intelligence & Economic Research: https://weddings.m2creative.sl/market-insights
+
+## XML & Syndication
+- XML Sitemap: https://weddings.m2creative.sl/sitemap.xml
+- XML Market Insights: https://weddings.m2creative.sl/api/export/insights.xml
+- Robots Protocol: https://weddings.m2creative.sl/robots.txt
